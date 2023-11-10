@@ -9,7 +9,12 @@ export const notesSlice = createSlice({
   initialState,
   reducers: {
     add: (state, action) => {
-      state.notes = [...state.notes, action.payload];
+      const newId =
+        state.notes.reduce(
+          (maxId, note) => Math.max(parseInt(note.id.slice(4)), maxId),
+          -1
+        ) + 1;
+      state.notes = [...state.notes, { ...action.payload, id: "note" + newId }];
     },
     update: (state, action) => {
       state.notes = state.notes.map((note) => {
@@ -19,12 +24,12 @@ export const notesSlice = createSlice({
         return note;
       });
     },
-    delete: (state, action) => {
+    deleteNote: (state, action) => {
       state.notes = state.notes.filter((note) => note.id !== action.payload.id);
     },
   },
 });
 
-export const { add, update } = notesSlice.actions;
+export const { add, update, deleteNote } = notesSlice.actions;
 
 export default notesSlice.reducer;
